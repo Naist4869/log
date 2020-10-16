@@ -11,11 +11,19 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-var BaseLogger *Logger
-
 type Logger struct {
 	*zap.Logger
 	lumberjackLogger *lumberjack.Logger
+}
+
+type Config struct {
+	MaxSize int
+	MaxAge  int
+	LogDir  string
+	Name    string
+	Console bool
+	Debug   bool
+	Level   map[string]zapcore.Level
 }
 
 func NewLogger(maxSize, maxAge int, logDir, name string, console, debug bool, level ...zapcore.Level) *Logger {
@@ -105,9 +113,6 @@ func NewLogger(maxSize, maxAge int, logDir, name string, console, debug bool, le
 
 }
 
-func SetLogger(newLogger *Logger) {
-	BaseLogger = newLogger
-}
 func NewTestLogger(component string, level zapcore.Level) *Logger {
 	config := zap.NewDevelopmentConfig()
 	config.EncoderConfig.EncodeCaller = zapcore.FullCallerEncoder
